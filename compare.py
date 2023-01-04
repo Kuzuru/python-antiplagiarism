@@ -71,7 +71,7 @@ def read_and_compare(file_orig, file_copy):
     code_copy = get_code_syntax_tree(file_copy)
 
     # Calculate the Levenshtein distance between the two strings
-    distance = 3  # TODO: levenstein(code_orig, code_copy)
+    distance = levenstein(code_orig, code_copy)
 
     # Print the distance, or save it to a file if verbose output is disabled
     print(distance)
