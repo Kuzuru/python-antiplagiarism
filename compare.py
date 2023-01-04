@@ -1,5 +1,5 @@
 import argparse
-
+import ast
 
 
 class ArgsWorker:
@@ -12,7 +12,7 @@ class ArgsWorker:
         parser.add_argument(
             "-v", "--verbose",
             type=self.str_to_bool,
-            nargs='?',
+            nargs="?",
             const=True,
             default=False,
             help="Verbose output"
@@ -24,22 +24,41 @@ class ArgsWorker:
     # Defines the string representation of the Boolean
     @staticmethod
     def str_to_bool(value) -> bool:
-        if value.lower() in {'false', 'f', '0', 'no', 'n'}:
+        if value.lower() in {"false", "f", "0", "no", "n"}:
             return False
-        elif value.lower() in {'true', 't', '1', 'yes', 'y'}:
+        elif value.lower() in {"true", "t", "1", "yes", "y"}:
             return True
 
-        raise ValueError(f'{value} is not a valid boolean value')
+        raise ValueError(f"{value} is not a valid boolean value")
+
+
+def get_code_syntax_tree(filename) -> str:
+    with open(filename, "r") as f:
+        code = f.read()
+
+    node = ast.parse(code)
+
+    # TODO: Replace the use of ast.dump() with something better
+    normalized_code = ast.dump(node)
+
+    return normalized_code
 
 
 def read_and_compare(file_orig, file_copy):
-    print(f"Got files: {file_orig} and {file_copy}")
+    code_orig = get_code_syntax_tree(file_orig)
+    code_copy = get_code_syntax_tree(file_copy)
+
+    # Calculate the Levenshtein distance between the two strings
+    distance = 3  # TODO: levenstein(code_orig, code_copy)
+
+    # Print the distance, or save it to a file if verbose output is disabled
+    print(distance)
 
 
 def main():
     args = ArgsWorker()
 
-    with open(args.get.input_list, 'r') as f:
+    with open(args.get.input_list, "r") as f:
         for line in f:
             filenames = line.strip().split()
             read_and_compare(filenames[0], filenames[1])
