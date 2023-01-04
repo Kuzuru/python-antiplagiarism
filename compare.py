@@ -84,7 +84,11 @@ class Antiplagiarism:
         # and (1 - DIFFERENCE) is SIMILARITY
         similarity = 1 - (distance / len(code_orig))
 
-        output = f"[ {file_orig} || {file_copy} ]\nLevenstein: {distance}\nSimilarity: {similarity}\n\n"
+        percent = similarity * 100
+        formatted_percent = format(percent, ".1f") + "%"
+
+        output = f"[ {file_orig} || {file_copy} ]\nLevenstein: {distance}\nSimilarity: {similarity}"
+        output += f" (~ {formatted_percent})\n\n"
 
         # Print info on screen if verbose mode is on
         if self.args.get.verbose:
