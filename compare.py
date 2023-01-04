@@ -1,32 +1,35 @@
 import argparse
 
 
-# Defines the string representation of the Boolean
-def str_to_bool(value):
-    if value.lower() in {'false', 'f', '0', 'no', 'n'}:
-        return False
-    elif value.lower() in {'true', 't', '1', 'yes', 'y'}:
-        return True
 
-    raise ValueError(f'{value} is not a valid boolean value')
+class ArgsWorker:
+    def __init__(self):
+        parser = argparse.ArgumentParser(description="Assessing the similarity of two Python scripts")
 
+        parser.add_argument("input_list", type=str, help="Input file with list of files to compare")
+        parser.add_argument("scores_output", type=str, help="Output file of the similarity estimation of program texts")
 
-def parse_args():
-    parser = argparse.ArgumentParser(description="Assessing the similarity of two Python scripts")
+        parser.add_argument(
+            "-v", "--verbose",
+            type=self.str_to_bool,
+            nargs='?',
+            const=True,
+            default=False,
+            help="Verbose output"
+        )
 
-    parser.add_argument("input_list", type=str, help="Input file with list of files to compare")
-    parser.add_argument("scores_output", type=str, help="Output file of the similarity estimation of program texts")
+        # Uses to get arguments: args.get.input_list
+        self.get = parser.parse_args()
 
-    parser.add_argument(
-        "-v", "--verbose",
-        type=str_to_bool,
-        nargs='?',
-        const=True,
-        default=False,
-        help="Verbose output"
-    )
+    # Defines the string representation of the Boolean
+    @staticmethod
+    def str_to_bool(value) -> bool:
+        if value.lower() in {'false', 'f', '0', 'no', 'n'}:
+            return False
+        elif value.lower() in {'true', 't', '1', 'yes', 'y'}:
+            return True
 
-    return parser.parse_args()
+        raise ValueError(f'{value} is not a valid boolean value')
 
 
 def read_and_compare(file_orig, file_copy):
@@ -34,9 +37,9 @@ def read_and_compare(file_orig, file_copy):
 
 
 def main():
-    args = parse_args()
+    args = ArgsWorker()
 
-    with open(args.input_list, 'r') as f:
+    with open(args.get.input_list, 'r') as f:
         for line in f:
             filenames = line.strip().split()
             read_and_compare(filenames[0], filenames[1])
