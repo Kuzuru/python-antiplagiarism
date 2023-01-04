@@ -79,20 +79,20 @@ def read_and_compare(is_verbose: bool, scores_output: str, file_orig: str, file_
     # and (1 - DIFFERENCE) is SIMILARITY
     similarity = 1 - (distance / len(code_orig))
 
-    output = f"[{file_orig} // {file_copy}]\r\nDistance: {distance}\r\nSimilarity: {similarity}\r\n\n"
+    output = f"[ {file_orig} || {file_copy} ]\nLevenstein: {distance}\nSimilarity: {similarity}\n\n"
 
     # Print info on screen if verbose mode is on
     if is_verbose:
         if distance != 0 and len(code_orig) != 0:
             print(output)
         elif distance == 0 and len(code_orig) != 0:
-            print(f"[{file_orig} // {file_copy}]\r\nFiles are identical")
+            print(f"[ {file_orig} || {file_copy} ]\nFiles are identical\n\n")
 
     with open(scores_output, "a") as f:
         if distance != 0 and len(code_orig) != 0:
             f.write(output)
         elif distance == 0 and len(code_orig) != 0:
-            f.write(f"[{file_orig} // {file_copy}]\r\nFiles are identical")
+            f.write(f"[ {file_orig} || {file_copy} ]\nFiles are identical\n\n")
 
 
 def main():
