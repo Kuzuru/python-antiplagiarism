@@ -1,42 +1,64 @@
 import argparse
+import ast
 
 
-# Defines the string representation of the Boolean
-def str_to_bool(value):
-    if value.lower() in {'false', 'f', '0', 'no', 'n'}:
-        return False
-    elif value.lower() in {'true', 't', '1', 'yes', 'y'}:
-        return True
+class ArgsWorker:
+    def __init__(self):
+        parser = argparse.ArgumentParser(description="Assessing the similarity of two Python scripts")
 
-    raise ValueError(f'{value} is not a valid boolean value')
+        parser.add_argument("input_list", type=str, help="Input file with list of files to compare")
+        parser.add_argument("scores_output", type=str, help="Output file of the similarity estimation of program texts")
+
+        parser.add_argument(
+            "-v", "--verbose",
+            type=self.str_to_bool,
+            nargs="?",
+            const=True,
+            default=False,
+            help="Verbose output"
+        )
+
+        # Uses to get arguments: args.get.input_list
+        self.get = parser.parse_args()
+
+    # Defines the string representation of the Boolean
+    @staticmethod
+    def str_to_bool(value) -> bool:
+        if value.lower() in {"false", "f", "0", "no", "n"}:
+            return False
+        elif value.lower() in {"true", "t", "1", "yes", "y"}:
+            return True
+
+        raise ValueError(f"{value} is not a valid boolean value")
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(description="Assessing the similarity of two Python scripts")
+def get_code_syntax_tree(filename) -> str:
+    with open(filename, "r") as f:
+        code = f.read()
 
-    parser.add_argument("input_list", type=str, help="Input file with list of files to compare")
-    parser.add_argument("scores_output", type=str, help="Output file of the similarity estimation of program texts")
+    node = ast.parse(code)
 
-    parser.add_argument(
-        "-v", "--verbose",
-        type=str_to_bool,
-        nargs='?',
-        const=True,
-        default=False,
-        help="Verbose output"
-    )
+    # TODO: Replace the use of ast.dump() with something better
+    normalized_code = ast.dump(node)
 
-    return parser.parse_args()
+    return normalized_code
 
 
 def read_and_compare(file_orig, file_copy):
-    print(f"Got files: {file_orig} and {file_copy}")
+    code_orig = get_code_syntax_tree(file_orig)
+    code_copy = get_code_syntax_tree(file_copy)
+
+    # Calculate the Levenshtein distance between the two strings
+    distance = 3  # TODO: levenstein(code_orig, code_copy)
+
+    # Print the distance, or save it to a file if verbose output is disabled
+    print(distance)
 
 
 def main():
-    args = parse_args()
+    args = ArgsWorker()
 
-    with open(args.input_list, 'r') as f:
+    with open(args.get.input_list, "r") as f:
         for line in f:
             filenames = line.strip().split()
             read_and_compare(filenames[0], filenames[1])

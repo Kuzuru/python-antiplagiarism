@@ -1,3 +1,3 @@
 test/files/main.py test/plagiat1/main.py
-test/files/loss.py test/plagiat2/loss.py
-test/files/loss.py test/files/loss.py
+test/files/lossy.py test/plagiat2/lossy.py
+test/files/lossy.py test/files/lossy.py
