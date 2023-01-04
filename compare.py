@@ -29,8 +29,17 @@ def parse_args():
     return parser.parse_args()
 
 
+def read_and_compare(file_orig, file_copy):
+    print(f"Got files: {file_orig} and {file_copy}")
+
+
 def main():
-    parse_args()
+    args = parse_args()
+
+    with open(args.input_list, 'r') as f:
+        for line in f:
+            filenames = line.strip().split()
+            read_and_compare(filenames[0], filenames[1])
 
 
 if __name__ == "__main__":
